@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Julbert Printing Press Inc.</title>
+  <link rel="stylesheet" href="dashboard_julbert.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">JP</div>
+        <div class="sidebar-title">Dashboard</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="showSection('overview')" type="button">
+          <span class="nav-icon"></span>
+          <span>Overview</span>
+        </button>
+        <button class="nav-item" onclick="showSection('products')" type="button">
+          <span class="nav-icon"></span>
+          <span>All Products</span>
+        </button>
+        <button class="nav-item" onclick="showSection('orders')" type="button">
+          <span class="nav-icon"></span>
+          <span>Order History</span>
+        </button>
+        <button class="nav-item" onclick="showSection('tracking')" type="button">
+          <span class="nav-icon"></span>
+          <span>Track Orders</span>
+        </button>
+      </nav>
+
+      <div class="user-section">
+        <div class="user-info">
+          <div class="user-avatar">JD</div>
+          <div>
+            <div class="user-name">John Doe</div>
+            <div class="user-email">john@example.com</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="logout()" type="button">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+      <div class="top-bar">
+        <div>
+          <button class="menu-toggle" onclick="toggleSidebar()" type="button">â˜°</button>
+          <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
+          <div class="breadcrumb" id="breadcrumb">Home > Dashboard</div>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <section class="dashboard-section active" id="overview">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">12</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">3</div>
+              <div class="stat-label">Pending Orders</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">â‚±15,450</div>
+              <div class="stat-label">Total Spent</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">2</div>
+              <div class="stat-label">In Transit</div>
+            </div>
+          </div>
+
+          <div class="order-table">
+            <h3 style="padding: 20px 20px 0; color: #1a365d; font-size: 18px; font-weight: 700;">Recent Orders</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#JP-2025-001</td>
+                  <td>Business Cards</td>
+                  <td>Jan 15, 2025</td>
+                  <td><span class="status-badge status-processing">Processing</span></td>
+                  <td>â‚±1,200</td>
+                </tr>
+                <tr>
+                  <td>#JP-2025-002</td>
+                  <td>Flyers</td>
+                  <td>Jan 10, 2025</td>
+                  <td><span class="status-badge status-completed">Completed</span></td>
+                  <td>â‚±850</td>
+                </tr>
+                <tr>
+                  <td>#JP-2025-003</td>
+                  <td>Postcards</td>
+                  <td>Jan 8, 2025</td>
+                  <td><span class="status-badge status-pending">Pending</span></td>
+                  <td>â‚±650</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="dashboard-section" id="products">
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-image">POSTCARD IMAGE</div>
+              <div class="product-info">
+                <h3 class="product-title">Premium Postcards</h3>
+                <p class="product-description">High-quality postcards perfect for marketing campaigns and personal messages.</p>
+                <div class="product-price">Starting at â‚±15/piece</div>
+                <button class="add-to-cart-btn" type="button" onclick="addToCart('Premium Postcards','â‚±15/piece')">Add to Cart</button>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-image">FLYER IMAGE</div>
+              <div class="product-info">
+                <h3 class="product-title">Custom Flyers</h3>
+                <p class="product-description">Eye-catching flyers that grab attention and deliver your message effectively.</p>
+                <div class="product-price">Starting at â‚±25/piece</div>
+                <button class="add-to-cart-btn" type="button" onclick="addToCart('Custom Flyers','â‚±25/piece')">Add to Cart</button>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-image">STICKER IMAGE</div>
+              <div class="product-info">
+                <h3 class="product-title">Vinyl Stickers</h3>
+                <p class="product-description">Durable weather-resistant stickers for indoor and outdoor use.</p>
+                <div class="product-price">Starting at â‚±10/piece</div>
+                <button class="add-to-cart-btn" type="button" onclick="addToCart('Vinyl Stickers','â‚±10/piece')">Add to Cart</button>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-image">BUSINESS CARD IMAGE</div>
+              <div class="product-info">
+                <h3 class="product-title">Business Cards</h3>
+                <p class="product-description">Professional business cards that make a great first impression.</p>
+                <div class="product-price">Starting at â‚±100/100pcs</div>
+                <button class="add-to-cart-btn" type="button" onclick="addToCart('Business Cards','â‚±100/100pcs')">Add to Cart</button>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-image">BROCHURE IMAGE</div>
+              <div class="product-info">
+                <h3 class="product-title">Tri-fold Brochures</h3>
+                <p class="product-description">Informative brochures perfect for showcasing your services and products.</p>
+                <div class="product-price">Starting at â‚±35/piece</div>
+                <button class="add-to-cart-btn" type="button" onclick="addToCart('Tri-fold Brochures','â‚±35/piece')">Add to Cart</button>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-image">BANNER IMAGE</div>
+              <div class="product-info">
+                <h3 class="product-title">Vinyl Banners</h3>
+                <p class="product-description">Large format banners for events, promotions, and advertising.</p>
+                <div class="product-price">Starting at â‚±250/sqft</div>
+                <button class="add-to-cart-btn" type="button" onclick="addToCart('Vinyl Banners','â‚±250/sqft')">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="dashboard-section" id="orders">
+          <div class="order-table">
+            <h3 style="padding: 20px 20px 0; color: #1a365d; font-size: 18px; font-weight: 700;">Order History</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Order Date</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#JP-2025-001</td>
+                  <td>Business Cards</td>
+                  <td>500 pcs</td>
+                  <td>Jan 15, 2025</td>
+                  <td><span class="status-badge status-processing">Processing</span></td>
+                  <td>â‚±1,200</td>
+                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2025-001')">View</button></td>
+                </tr>
+                <tr>
+                  <td>#JP-2025-002</td>
+                  <td>Flyers</td>
+                  <td>100 pcs</td>
+                  <td>Jan 10, 2025</td>
+                  <td><span class="status-badge status-completed">Completed</span></td>
+                  <td>â‚±850</td>
+                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2025-002')">View</button></td>
+                </tr>
+                <tr>
+                  <td>#JP-2025-003</td>
+                  <td>Postcards</td>
+                  <td>200 pcs</td>
+                  <td>Jan 8, 2025</td>
+                  <td><span class="status-badge status-pending">Pending</span></td>
+                  <td>â‚±650</td>
+                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2025-003')">View</button></td>
+                </tr>
+                <tr>
+                  <td>#JP-2024-098</td>
+                  <td>Vinyl Banner</td>
+                  <td>1 pc (3x6ft)</td>
+                  <td>Dec 28, 2024</td>
+                  <td><span class="status-badge status-completed">Completed</span></td>
+                  <td>â‚±1,500</td>
+                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2024-098')">View</button></td>
+                </tr>
+                <tr>
+                  <td>#JP-2024-097</td>
+                  <td>Stickers</td>
+                  <td>50 pcs</td>
+                  <td>Dec 20, 2024</td>
+                  <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                  <td>â‚±500</td>
+                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2024-097')">View</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="dashboard-section" id="tracking">
+          <div class="order-table">
+            <h3 style="padding: 20px 20px 0; color: #1a365d; font-size: 18px; font-weight: 700;">Track Your Orders</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Current Status</th>
+                  <th>Estimated Delivery</th>
+                  <th>Progress</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#JP-2025-001</td>
+                  <td>Business Cards</td>
+                  <td><span class="status-badge status-processing">In Production</span></td>
+                  <td>Jan 18, 2025</td>
+                  <td>
+                    <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
+                      <div style="background: #3182ce; height: 100%; width: 60%; border-radius: 4px;"></div>
+                    </div>
+                  </td>
+                  <td><button class="view-btn" type="button" onclick="trackOrder('ORD001')">Track</button></td>
+                </tr>
+                <tr>
+                  <td>#JP-2025-003</td>
+                  <td>Postcards</td>
+                  <td><span class="status-badge status-pending">Waiting Approval</span></td>
+                  <td>Jan 22, 2025</td>
+                  <td>
+                    <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
+                      <div style="background: #d69e2e; height: 100%; width: 20%; border-radius: 4px;"></div>
+                    </div>
+                  </td>
+                  <td><button class="view-btn" type="button" onclick="trackOrder('ORD002')">Track</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="dashboard_julbert.js"></script>
+</body>
+</html>
