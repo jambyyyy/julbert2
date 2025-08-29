@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,284 +7,509 @@
   <link rel="stylesheet" href="dashboard_julbert.css" />
 </head>
 <body>
-  <div class="dashboard-container">
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-logo">JP</div>
-        <div class="sidebar-title">Dashboard</div>
+  <!-- Header from landing page -->
+  <header class="header">
+    <div class="container">
+      <div class="logo-section">
+        <div class="logo">
+          <div class="logo-placeholder">JP</div>
+        </div>
+        <h1 class="company-name">JULBERT PRINTING PRESS INC.</h1>
       </div>
 
-      <nav class="sidebar-nav">
-        <button class="nav-item active" onclick="showSection('overview')" type="button">
-          <span class="nav-icon"></span>
-          <span>Overview</span>
-        </button>
-        <button class="nav-item" onclick="showSection('products')" type="button">
-          <span class="nav-icon"></span>
-          <span>All Products</span>
-        </button>
-        <button class="nav-item" onclick="showSection('orders')" type="button">
-          <span class="nav-icon"></span>
-          <span>Order History</span>
-        </button>
-        <button class="nav-item" onclick="showSection('tracking')" type="button">
-          <span class="nav-icon"></span>
-          <span>Track Orders</span>
-        </button>
-      </nav>
+      <div class="header-right">
+        <div class="location">
+          <span class="location-icon">📍</span>
+          <span>1st East Rosario, Tubod, Iligan City</span>
+        </div>
 
-      <div class="user-section">
+        <nav class="auth-buttons">
+          <button class="nav-item" onclick="showSection('cart')">
+            <span>🛒</span>
+            <span>Cart (3)</span>
+          </button>
+
+          <button class="nav-item btn-logout" onclick="logout()">
+            <span>👤</span>
+            <span>Logout</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <!-- Professional Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
         <div class="user-info">
           <div class="user-avatar">JD</div>
-          <div>
+          <div class="user-details">
             <div class="user-name">John Doe</div>
             <div class="user-email">john@example.com</div>
           </div>
         </div>
-        <button class="logout-btn" onclick="logout()" type="button">Logout</button>
       </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">DASHBOARD</div>
+          <button class="nav-item active" onclick="showSection('overview')" type="button">
+            <span class="nav-icon">📊</span>
+            <span>Overview</span>
+          </button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">PRODUCTS</div>
+          <button class="nav-item" onclick="showSection('products')" type="button">
+            <span class="nav-icon">📦</span>
+            <span>All Products</span>
+          </button>
+          <button class="nav-item" onclick="filterProducts('postcards')" type="button">
+            <span class="nav-icon">📮</span>
+            <span>Postcards</span>
+          </button>
+          <button class="nav-item" onclick="filterProducts('flyers')" type="button">
+            <span class="nav-icon">📄</span>
+            <span>Flyers & Brochures</span>
+          </button>
+          <button class="nav-item" onclick="filterProducts('stickers')" type="button">
+            <span class="nav-icon">🏷️</span>
+            <span>Stickers & Labels</span>
+          </button>
+          <button class="nav-item" onclick="filterProducts('business-cards')" type="button">
+            <span class="nav-icon">💼</span>
+            <span>Business Cards</span>
+          </button>
+          <button class="nav-item" onclick="filterProducts('banners')" type="button">
+            <span class="nav-icon">🎯</span>
+            <span>Banners</span>
+          </button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">ORDERS</div>
+          <button class="nav-item" onclick="showSection('orders')" type="button">
+            <span class="nav-icon">📋</span>
+            <span>Order History</span>
+          </button>
+          <button class="nav-item" onclick="showSection('tracking')" type="button">
+            <span class="nav-icon">🚚</span>
+            <span>Track Orders</span>
+          </button>
+          <button class="nav-item" onclick="showSection('cart')" type="button">
+            <span class="nav-icon">🛒</span>
+            <span>Shopping Cart</span>
+            <span class="cart-count">3</span>
+          </button>
+        </div>
+      </nav>
     </aside>
 
     <main class="main-content" id="mainContent">
       <div class="top-bar">
-        <div>
-          <button class="menu-toggle" onclick="toggleSidebar()" type="button">â˜°</button>
-          <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
-          <div class="breadcrumb" id="breadcrumb">Home > Dashboard</div>
+        <div class="top-bar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()" type="button">☰</button>
+          <div class="page-header">
+            <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
+            <div class="breadcrumb" id="breadcrumb">Home > Dashboard</div>
+          </div>
+        </div>
+        <div class="top-bar-right">
+          <div class="search-box">
+            <input type="text" placeholder="Search products..." />
+            <button type="button">Search</button>
+          </div>
         </div>
       </div>
+      <!-- Category bar -->
+      <div class="category-bar">
+          <button class="cat-pill active" onclick="showSection('products')">All Products</button>
+          <button class="cat-pill" onclick="filterProducts('business-cards')">Business Cards</button>
+          <button class="cat-pill" onclick="filterProducts('postcards')">Postcards</button>
+          <button class="cat-pill" onclick="filterProducts('flyers')">Marketing Materials</button>
+          <button class="cat-pill" onclick="filterProducts('banners')">Signs & Banners</button>
+          <button class="cat-pill" onclick="filterProducts('stickers')">Stickers & Labels</button>
+          <button class="cat-pill" onclick="showSection('orders')">Order History</button>
+      </div>
+
 
       <div class="content-area">
+        <!-- Overview Section -->
         <section class="dashboard-section active" id="overview">
           <div class="stats-grid">
             <div class="stat-card">
-              <div class="stat-number">12</div>
-              <div class="stat-label">Total Orders</div>
+              <div class="stat-icon">📦</div>
+              <div class="stat-content">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Total Orders</div>
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-number">3</div>
-              <div class="stat-label">Pending Orders</div>
+              <div class="stat-icon">⏳</div>
+              <div class="stat-content">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Pending Orders</div>
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-number">â‚±15,450</div>
-              <div class="stat-label">Total Spent</div>
+              <div class="stat-icon">💰</div>
+              <div class="stat-content">
+                <div class="stat-number">₱15,450</div>
+                <div class="stat-label">Total Spent</div>
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-number">2</div>
-              <div class="stat-label">In Transit</div>
+              <div class="stat-icon">🚚</div>
+              <div class="stat-content">
+                <div class="stat-number">2</div>
+                <div class="stat-label">In Transit</div>
+              </div>
             </div>
           </div>
 
-          <div class="order-table">
-            <h3 style="padding: 20px 20px 0; color: #1a365d; font-size: 18px; font-weight: 700;">Recent Orders</h3>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Product</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>#JP-2025-001</td>
-                  <td>Business Cards</td>
-                  <td>Jan 15, 2025</td>
-                  <td><span class="status-badge status-processing">Processing</span></td>
-                  <td>â‚±1,200</td>
-                </tr>
-                <tr>
-                  <td>#JP-2025-002</td>
-                  <td>Flyers</td>
-                  <td>Jan 10, 2025</td>
-                  <td><span class="status-badge status-completed">Completed</span></td>
-                  <td>â‚±850</td>
-                </tr>
-                <tr>
-                  <td>#JP-2025-003</td>
-                  <td>Postcards</td>
-                  <td>Jan 8, 2025</td>
-                  <td><span class="status-badge status-pending">Pending</span></td>
-                  <td>â‚±650</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="content-card">
+            <h3 class="card-title">Recent Orders</h3>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#JP-2025-001</td>
+                    <td>Business Cards</td>
+                    <td>Jan 15, 2025</td>
+                    <td><span class="status-badge status-processing">Processing</span></td>
+                    <td>₱1,200</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-001')">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>#JP-2025-002</td>
+                    <td>Flyers</td>
+                    <td>Jan 10, 2025</td>
+                    <td><span class="status-badge status-completed">Completed</span></td>
+                    <td>₱850</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-002')">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>#JP-2025-003</td>
+                    <td>Postcards</td>
+                    <td>Jan 8, 2025</td>
+                    <td><span class="status-badge status-pending">Pending</span></td>
+                    <td>₱650</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-003')">View</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 
+        <!-- Products Section -->
         <section class="dashboard-section" id="products">
+          <div class="section-header">
+            <h2 class="section-title">Our Products & Services</h2>
+            <p class="section-subtitle">Professional printing solutions for all your business needs</p>
+          </div>
+
           <div class="products-grid">
-            <div class="product-card">
-              <div class="product-image">POSTCARD IMAGE</div>
+            <div class="product-card" data-category="postcards">
+              <div class="product-image">
+                <div class="product-image-placeholder">POSTCARD IMAGE</div>
+              </div>
               <div class="product-info">
                 <h3 class="product-title">Premium Postcards</h3>
                 <p class="product-description">High-quality postcards perfect for marketing campaigns and personal messages.</p>
-                <div class="product-price">Starting at â‚±15/piece</div>
-                <button class="add-to-cart-btn" type="button" onclick="addToCart('Premium Postcards','â‚±15/piece')">Add to Cart</button>
+                <div class="product-price">Starting at ₱15/piece</div>
+                <div class="product-actions">
+                  <button class="btn-primary" onclick="addToCart('Premium Postcards', '₱15/piece')">Add to Cart</button>
+                  <button class="btn-secondary" onclick="viewProduct('postcards')">View Details</button>
+                </div>
               </div>
             </div>
 
-            <div class="product-card">
-              <div class="product-image">FLYER IMAGE</div>
+            <div class="product-card" data-category="flyers">
+              <div class="product-image">
+                <div class="product-image-placeholder">FLYER IMAGE</div>
+              </div>
               <div class="product-info">
                 <h3 class="product-title">Custom Flyers</h3>
                 <p class="product-description">Eye-catching flyers that grab attention and deliver your message effectively.</p>
-                <div class="product-price">Starting at â‚±25/piece</div>
-                <button class="add-to-cart-btn" type="button" onclick="addToCart('Custom Flyers','â‚±25/piece')">Add to Cart</button>
+                <div class="product-price">Starting at ₱25/piece</div>
+                <div class="product-actions">
+                  <button class="btn-primary" onclick="addToCart('Custom Flyers', '₱25/piece')">Add to Cart</button>
+                  <button class="btn-secondary" onclick="viewProduct('flyers')">View Details</button>
+                </div>
               </div>
             </div>
 
-            <div class="product-card">
-              <div class="product-image">STICKER IMAGE</div>
+            <div class="product-card" data-category="stickers">
+              <div class="product-image">
+                <div class="product-image-placeholder">STICKER IMAGE</div>
+              </div>
               <div class="product-info">
                 <h3 class="product-title">Vinyl Stickers</h3>
                 <p class="product-description">Durable weather-resistant stickers for indoor and outdoor use.</p>
-                <div class="product-price">Starting at â‚±10/piece</div>
-                <button class="add-to-cart-btn" type="button" onclick="addToCart('Vinyl Stickers','â‚±10/piece')">Add to Cart</button>
+                <div class="product-price">Starting at ₱10/piece</div>
+                <div class="product-actions">
+                  <button class="btn-primary" onclick="addToCart('Vinyl Stickers', '₱10/piece')">Add to Cart</button>
+                  <button class="btn-secondary" onclick="viewProduct('stickers')">View Details</button>
+                </div>
               </div>
             </div>
 
-            <div class="product-card">
-              <div class="product-image">BUSINESS CARD IMAGE</div>
+            <div class="product-card" data-category="business-cards">
+              <div class="product-image">
+                <div class="product-image-placeholder">BUSINESS CARD IMAGE</div>
+              </div>
               <div class="product-info">
                 <h3 class="product-title">Business Cards</h3>
                 <p class="product-description">Professional business cards that make a great first impression.</p>
-                <div class="product-price">Starting at â‚±100/100pcs</div>
-                <button class="add-to-cart-btn" type="button" onclick="addToCart('Business Cards','â‚±100/100pcs')">Add to Cart</button>
+                <div class="product-price">Starting at ₱100/100pcs</div>
+                <div class="product-actions">
+                  <button class="btn-primary" onclick="addToCart('Business Cards', '₱100/100pcs')">Add to Cart</button>
+                  <button class="btn-secondary" onclick="viewProduct('business-cards')">View Details</button>
+                </div>
               </div>
             </div>
 
-            <div class="product-card">
-              <div class="product-image">BROCHURE IMAGE</div>
+            <div class="product-card" data-category="flyers">
+              <div class="product-image">
+                <div class="product-image-placeholder">BROCHURE IMAGE</div>
+              </div>
               <div class="product-info">
                 <h3 class="product-title">Tri-fold Brochures</h3>
                 <p class="product-description">Informative brochures perfect for showcasing your services and products.</p>
-                <div class="product-price">Starting at â‚±35/piece</div>
-                <button class="add-to-cart-btn" type="button" onclick="addToCart('Tri-fold Brochures','â‚±35/piece')">Add to Cart</button>
+                <div class="product-price">Starting at ₱35/piece</div>
+                <div class="product-actions">
+                  <button class="btn-primary" onclick="addToCart('Tri-fold Brochures', '₱35/piece')">Add to Cart</button>
+                  <button class="btn-secondary" onclick="viewProduct('brochures')">View Details</button>
+                </div>
               </div>
             </div>
 
-            <div class="product-card">
-              <div class="product-image">BANNER IMAGE</div>
+            <div class="product-card" data-category="banners">
+              <div class="product-image">
+                <div class="product-image-placeholder">BANNER IMAGE</div>
+              </div>
               <div class="product-info">
                 <h3 class="product-title">Vinyl Banners</h3>
                 <p class="product-description">Large format banners for events, promotions, and advertising.</p>
-                <div class="product-price">Starting at â‚±250/sqft</div>
-                <button class="add-to-cart-btn" type="button" onclick="addToCart('Vinyl Banners','â‚±250/sqft')">Add to Cart</button>
+                <div class="product-price">Starting at ₱250/sqft</div>
+                <div class="product-actions">
+                  <button class="btn-primary" onclick="addToCart('Vinyl Banners', '₱250/sqft')">Add to Cart</button>
+                  <button class="btn-secondary" onclick="viewProduct('banners')">View Details</button>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
+        <!-- Orders Section -->
         <section class="dashboard-section" id="orders">
-          <div class="order-table">
-            <h3 style="padding: 20px 20px 0; color: #1a365d; font-size: 18px; font-weight: 700;">Order History</h3>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Order Date</th>
-                  <th>Status</th>
-                  <th>Total</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>#JP-2025-001</td>
-                  <td>Business Cards</td>
-                  <td>500 pcs</td>
-                  <td>Jan 15, 2025</td>
-                  <td><span class="status-badge status-processing">Processing</span></td>
-                  <td>â‚±1,200</td>
-                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2025-001')">View</button></td>
-                </tr>
-                <tr>
-                  <td>#JP-2025-002</td>
-                  <td>Flyers</td>
-                  <td>100 pcs</td>
-                  <td>Jan 10, 2025</td>
-                  <td><span class="status-badge status-completed">Completed</span></td>
-                  <td>â‚±850</td>
-                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2025-002')">View</button></td>
-                </tr>
-                <tr>
-                  <td>#JP-2025-003</td>
-                  <td>Postcards</td>
-                  <td>200 pcs</td>
-                  <td>Jan 8, 2025</td>
-                  <td><span class="status-badge status-pending">Pending</span></td>
-                  <td>â‚±650</td>
-                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2025-003')">View</button></td>
-                </tr>
-                <tr>
-                  <td>#JP-2024-098</td>
-                  <td>Vinyl Banner</td>
-                  <td>1 pc (3x6ft)</td>
-                  <td>Dec 28, 2024</td>
-                  <td><span class="status-badge status-completed">Completed</span></td>
-                  <td>â‚±1,500</td>
-                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2024-098')">View</button></td>
-                </tr>
-                <tr>
-                  <td>#JP-2024-097</td>
-                  <td>Stickers</td>
-                  <td>50 pcs</td>
-                  <td>Dec 20, 2024</td>
-                  <td><span class="status-badge status-cancelled">Cancelled</span></td>
-                  <td>â‚±500</td>
-                  <td><button class="view-btn" type="button" onclick="viewOrder('JP-2024-097')">View</button></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="content-card">
+            <h3 class="card-title">Order History</h3>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#JP-2025-001</td>
+                    <td>Business Cards</td>
+                    <td>500 pcs</td>
+                    <td>Jan 15, 2025</td>
+                    <td><span class="status-badge status-processing">Processing</span></td>
+                    <td>₱1,200</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-001')">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>#JP-2025-002</td>
+                    <td>Flyers</td>
+                    <td>100 pcs</td>
+                    <td>Jan 10, 2025</td>
+                    <td><span class="status-badge status-completed">Completed</span></td>
+                    <td>₱850</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-002')">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>#JP-2025-003</td>
+                    <td>Postcards</td>
+                    <td>200 pcs</td>
+                    <td>Jan 8, 2025</td>
+                    <td><span class="status-badge status-pending">Pending</span></td>
+                    <td>₱650</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-003')">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>#JP-2024-098</td>
+                    <td>Vinyl Banner</td>
+                    <td>1 pc (3x6ft)</td>
+                    <td>Dec 28, 2024</td>
+                    <td><span class="status-badge status-completed">Completed</span></td>
+                    <td>₱1,500</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2024-098')">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>#JP-2024-097</td>
+                    <td>Stickers</td>
+                    <td>50 pcs</td>
+                    <td>Dec 20, 2024</td>
+                    <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                    <td>₱500</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2024-097')">View</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 
+        <!-- Tracking Section -->
         <section class="dashboard-section" id="tracking">
-          <div class="order-table">
-            <h3 style="padding: 20px 20px 0; color: #1a365d; font-size: 18px; font-weight: 700;">Track Your Orders</h3>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Product</th>
-                  <th>Current Status</th>
-                  <th>Estimated Delivery</th>
-                  <th>Progress</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>#JP-2025-001</td>
-                  <td>Business Cards</td>
-                  <td><span class="status-badge status-processing">In Production</span></td>
-                  <td>Jan 18, 2025</td>
-                  <td>
-                    <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
-                      <div style="background: #3182ce; height: 100%; width: 60%; border-radius: 4px;"></div>
-                    </div>
-                  </td>
-                  <td><button class="view-btn" type="button" onclick="trackOrder('ORD001')">Track</button></td>
-                </tr>
-                <tr>
-                  <td>#JP-2025-003</td>
-                  <td>Postcards</td>
-                  <td><span class="status-badge status-pending">Waiting Approval</span></td>
-                  <td>Jan 22, 2025</td>
-                  <td>
-                    <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
-                      <div style="background: #d69e2e; height: 100%; width: 20%; border-radius: 4px;"></div>
-                    </div>
-                  </td>
-                  <td><button class="view-btn" type="button" onclick="trackOrder('ORD002')">Track</button></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="content-card">
+            <h3 class="card-title">Track Your Orders</h3>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Current Status</th>
+                    <th>Estimated Delivery</th>
+                    <th>Progress</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#JP-2025-001</td>
+                    <td>Business Cards</td>
+                    <td><span class="status-badge status-processing">In Production</span></td>
+                    <td>Jan 18, 2025</td>
+                    <td>
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%"></div>
+                      </div>
+                      <span class="progress-text">60%</span>
+                    </td>
+                    <td><button class="btn-primary btn-sm" onclick="trackOrder('JP-2025-001')">Track</button></td>
+                  </tr>
+                  <tr>
+                    <td>#JP-2025-003</td>
+                    <td>Postcards</td>
+                    <td><span class="status-badge status-pending">Waiting Approval</span></td>
+                    <td>Jan 22, 2025</td>
+                    <td>
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 20%"></div>
+                      </div>
+                      <span class="progress-text">20%</span>
+                    </td>
+                    <td><button class="btn-primary btn-sm" onclick="trackOrder('JP-2025-003')">Track</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cart Section -->
+        <section class="dashboard-section" id="cart">
+          <div class="content-card">
+            <h3 class="card-title">Shopping Cart</h3>
+            <div class="cart-items">
+              <div class="cart-item">
+                <div class="cart-item-image">
+                  <div class="product-image-placeholder">POSTCARD</div>
+                </div>
+                <div class="cart-item-details">
+                  <h4>Premium Postcards</h4>
+                  <p>High-quality postcards for marketing</p>
+                  <div class="cart-item-price">₱15/piece</div>
+                </div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-btn" onclick="updateQuantity('item1', -1)">-</button>
+                  <span class="quantity">100</span>
+                  <button class="quantity-btn" onclick="updateQuantity('item1', 1)">+</button>
+                </div>
+                <div class="cart-item-total">₱1,500</div>
+                <button class="cart-item-remove" onclick="removeFromCart('item1')">×</button>
+              </div>
+
+              <div class="cart-item">
+                <div class="cart-item-image">
+                  <div class="product-image-placeholder">FLYER</div>
+                </div>
+                <div class="cart-item-details">
+                  <h4>Custom Flyers</h4>
+                  <p>Eye-catching promotional flyers</p>
+                  <div class="cart-item-price">₱25/piece</div>
+                </div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-btn" onclick="updateQuantity('item2', -1)">-</button>
+                  <span class="quantity">50</span>
+                  <button class="quantity-btn" onclick="updateQuantity('item2', 1)">+</button>
+                </div>
+                <div class="cart-item-total">₱1,250</div>
+                <button class="cart-item-remove" onclick="removeFromCart('item2')">×</button>
+              </div>
+
+              <div class="cart-item">
+                <div class="cart-item-image">
+                  <div class="product-image-placeholder">BUSINESS CARD</div>
+                </div>
+                <div class="cart-item-details">
+                  <h4>Business Cards</h4>
+                  <p>Professional business cards</p>
+                  <div class="cart-item-price">₱100/100pcs</div>
+                </div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-btn" onclick="updateQuantity('item3', -1)">-</button>
+                  <span class="quantity">2</span>
+                  <button class="quantity-btn" onclick="updateQuantity('item3', 1)">+</button>
+                </div>
+                <div class="cart-item-total">₱200</div>
+                <button class="cart-item-remove" onclick="removeFromCart('item3')">×</button>
+              </div>
+            </div>
+
+            <div class="cart-summary">
+              <div class="cart-summary-row">
+                <span>Subtotal:</span>
+                <span>₱2,950</span>
+              </div>
+              <div class="cart-summary-row">
+                <span>Shipping:</span>
+                <span>₱100</span>
+              </div>
+              <div class="cart-summary-row cart-total">
+                <span>Total:</span>
+                <span>₱3,050</span>
+              </div>
+              <div class="cart-actions">
+                <button class="btn-secondary" onclick="clearCart()">Clear Cart</button>
+                <button class="btn-primary" onclick="proceedToCheckout()">Proceed to Checkout</button>
+              </div>
+            </div>
           </div>
         </section>
       </div>
