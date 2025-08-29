@@ -1,17 +1,22 @@
 <?php
 require __DIR__ . '/config.php';
+json_header();
 
-$body = json_decode(file_get_contents('php://input'), true);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  echo json_encode(['ok' => false, 'error' => 'Method not allowed']);
+  exit;
+}
 
-$full_name = trim($body['full_name'] ?? '');
-$email = trim($body['email'] ?? '');
-$password = (string)($body['password'] ?? '');
-$confirm  = (string)($body['confirm_password'] ?? '');
-$username = trim($body['username'] ?? '');          
-$contact_number = trim($body['contact_number'] ?? ''); 
+$body = read_json_body();
+$full_name       = trim((string)($body['full_name'] ?? ''));
+$username        = trim((string)($body['username'] ?? ''));
+$email           = trim((string)($body['email'] ?? ''));
+$contact_number  = trim((string)($body['contact_number'] ?? ''));
+$password        = (string)($body['password'] ?? '');
+$confirm         = (string)($body['confirm_password'] ?? '');
 
-if ($full_name === '' || $email === '' || $password === '' || $confirm === '' || $username === '') {
-  echo json_encode(['ok' => false, 'error' => 'Full name, email, password, and username are required.']);
+if ($full_name === '' || $username === '' || $email === '' || $password === '' || $confirm === '') {
+  echo json_encode(['ok' => false, 'error' => 'All fields are required.']);
   exit;
 }
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -26,48 +31,26 @@ if (strlen($password) < 6) {
   echo json_encode(['ok' => false, 'error' => 'Password must be at least 6 characters.']);
   exit;
 }
-if ($contact_number !== '' && !preg_match('/^[+0-9][0-9\s\-()]{6,}$/', $contact_number)) {
-  echo json_encode(['ok' => false, 'error' => 'Invalid contact number.']);
-  exit;
-}
 
-$stmt = $pdo->prepare('SELECT customer_id FROM customer WHERE email = ? LIMIT 1');
-$stmt->execute([$email]);
-if ($stmt->fetch()) {
-  echo json_encode(['ok' => false, 'error' => 'Email already in use.']);
+$stmt = $mysqli->prepare("SELECT customer_id FROM customer WHERE email = ? OR username = ? LIMIT 1");
+$stmt->bind_param("ss", $email, $username);
+$stmt->execute();
+if ($stmt->get_result()->fetch_assoc()) {
+  echo json_encode(['ok' => false, 'error' => 'Email or Username already exists.']);
   exit;
 }
-
-$stmt = $pdo->prepare('SELECT customer_id FROM customer WHERE username = ? LIMIT 1');
-$stmt->execute([$username]);
-if ($stmt->fetch()) {
-  echo json_encode(['ok' => false, 'error' => 'Username already taken.']);
-  exit;
-}
+$stmt->close();
 
 $hash = password_hash($password, PASSWORD_DEFAULT);
-$stmt = $pdo->prepare('
-  INSERT INTO customer (email, full_name, password, contact_number, username)
-  VALUES (?, ?, ?, ?, ?)
-');
-$stmt->execute([$email, $full_name, $hash, $contact_number !== '' ? $contact_number : null, $username]);
+$stmt = $mysqli->prepare("INSERT INTO customer (email, full_name, password, contact_number, username) VALUES (?, ?, ?, ?, ?)");
+$stmt->bind_param("sssss", $email, $full_name, $hash, $contact_number, $username);
+$stmt->execute();
+$stmt->close();
 
-$id = (int)$pdo->lastInsertId();
-
-$_SESSION['customer_id'] = $id;
-$_SESSION['customer_name'] = $full_name;
-$_SESSION['customer_email'] = $email;
+session_regenerate_id(true);
+$_SESSION['customer_id']       = $mysqli->insert_id;
+$_SESSION['customer_name']     = $full_name;
+$_SESSION['customer_email']    = $email;
 $_SESSION['customer_username'] = $username;
-$_SESSION['customer_contact'] = $contact_number;
 
-echo json_encode([
-  'ok' => true,
-  'message' => 'Account created.',
-  'customer' => [
-    'id' => $id,
-    'full_name' => $full_name,
-    'email' => $email,
-    'username' => $username,
-    'contact_number' => $contact_number
-  ]
-]);
+echo json_encode(['ok' => true, 'message' => 'Account created successfully.']);
