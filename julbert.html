@@ -27,14 +27,7 @@
             <span>👤</span>
             <span>My Account</span>
           </button>
-
-          <button class="nav-item btn-signup">
-            <span>🛒</span>
-            <span>Cart</span>
-          </button>
-        </nav>
-      </div>
-    </div>
+          
   </header>
 
   <div class="modal-overlay" id="authModal" onclick="closeAuthModal(event)">
@@ -63,7 +56,6 @@
 
         <div class="auth-switch">
           <p>Don't have an account?</p>
-          <!-- CHANGED: add type + pass event -->
           <button class="switch-link" type="button" onclick="switchToSignup(event)">Create Account</button>
         </div>
       </div>
@@ -92,7 +84,7 @@
 
           <div class="form-group">
             <label class="form-label" for="su_contact">Contact Number</label>
-            <input id="su_contact" name="contact_number" type="text" class="form-input" placeholder="+63 9XX XXX XXXX">
+            <input id="su_contact" name="contact_number" type="text" class="form-input" placeholder="Contact Number">
           </div>
 
           <div class="form-group">
@@ -110,7 +102,6 @@
 
         <div class="auth-switch">
           <p>Already have an account?</p>
-          <!-- CHANGED: add type + pass event -->
           <button class="switch-link" type="button" onclick="switchToLogin(event)">Sign In</button>
         </div>
       </div>
