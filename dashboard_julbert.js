@@ -1,7 +1,8 @@
 class Dashboard {
   constructor() {
     this.currentSection = 'overview';
-    this.isSidebarOpen = window.innerWidth > 768;
+    this.breakpoints = { mobile: 1024 };
+    this.isSidebarOpen = window.innerWidth > this.breakpoints.mobile;
     this.init();
   }
 
@@ -11,11 +12,10 @@ class Dashboard {
   }
 
   setupEventListeners() {
-    window.addEventListener('resize', () => {
-      this.updateResponsiveLayout();
-    });
+    window.addEventListener('resize', () => this.updateResponsiveLayout());
+
     document.addEventListener('click', (e) => {
-      if (window.innerWidth <= 768 && this.isSidebarOpen) {
+      if (window.innerWidth <= this.breakpoints.mobile && this.isSidebarOpen) {
         const sidebar = document.getElementById('sidebar');
         const menuToggle = document.querySelector('.menu-toggle');
         if (!sidebar || !menuToggle) return;
@@ -24,6 +24,15 @@ class Dashboard {
         }
       }
     });
+
+    const searchBtn = document.querySelector('.search-box button');
+    const searchInput = document.querySelector('.search-box input');
+    if (searchBtn) searchBtn.addEventListener('click', () => this.searchProducts());
+    if (searchInput) {
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') this.searchProducts();
+      });
+    }
   }
 
   updateResponsiveLayout() {
@@ -31,8 +40,8 @@ class Dashboard {
     const mainContent = document.getElementById('mainContent');
     if (!sidebar || !mainContent) return;
 
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('open');
+    if (window.innerWidth <= this.breakpoints.mobile) {
+      sidebar.classList.add('collapsed');
       mainContent.classList.add('expanded');
       this.isSidebarOpen = false;
     } else {
@@ -42,28 +51,16 @@ class Dashboard {
     }
   }
 
-  showSection(sectionId) {
-    const sections = document.querySelectorAll('.dashboard-section');
-    sections.forEach((section) => section.classList.remove('active'));
-
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) targetSection.classList.add('active');
-
-    const navItems = document.querySelectorAll('#sidebar .nav-item');
-    navItems.forEach((item) => item.classList.remove('active'));
-
-    const activeNavItem = Array.from(navItems).find((item) =>
-      item.getAttribute('onclick')?.includes(sectionId)
-    );
-    if (activeNavItem) activeNavItem.classList.add('active');
-
-    this.updatePageHeader(sectionId);
-
-    this.currentSection = sectionId;
-
-    if (window.innerWidth <= 768) {
-      this.closeSidebar();
+  showSection(id) {
+    document.querySelectorAll('.dashboard-section').forEach((s) => s.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) {
+      target.classList.add('active');
+      this.currentSection = id;
+      this.updatePageHeader(id);
     }
+
+    if (window.innerWidth <= this.breakpoints.mobile) this.closeSidebar();
   }
 
   updatePageHeader(sectionId) {
@@ -72,9 +69,10 @@ class Dashboard {
 
     const sectionTitles = {
       overview: 'Dashboard Overview',
-      products: 'All Products',
+      products: 'Our Products & Services',
       orders: 'Order History',
-      tracking: 'Track Orders',
+      tracking: 'Track Your Orders',
+      cart: 'Shopping Cart',
     };
 
     const sectionBreadcrumbs = {
@@ -82,6 +80,7 @@ class Dashboard {
       products: 'Home > Dashboard > Products',
       orders: 'Home > Dashboard > Orders',
       tracking: 'Home > Dashboard > Tracking',
+      cart: 'Home > Dashboard > Cart',
     };
 
     if (pageTitle) pageTitle.textContent = sectionTitles[sectionId] || 'Dashboard';
@@ -93,31 +92,23 @@ class Dashboard {
     const mainContent = document.getElementById('mainContent');
     if (!sidebar || !mainContent) return;
 
-    if (window.innerWidth <= 768) {
-      if (this.isSidebarOpen) {
-        sidebar.classList.remove('open');
-        this.isSidebarOpen = false;
-      } else {
-        sidebar.classList.add('open');
-        this.isSidebarOpen = true;
-      }
+    const isSmall = window.innerWidth <= this.breakpoints.mobile;
+
+    if (sidebar.classList.contains('collapsed')) {
+      sidebar.classList.remove('collapsed');
+      this.isSidebarOpen = true;
+      if (!isSmall) mainContent.classList.remove('expanded');
     } else {
-      if (this.isSidebarOpen) {
-        sidebar.classList.add('collapsed');
-        mainContent.classList.add('expanded');
-        this.isSidebarOpen = false;
-      } else {
-        sidebar.classList.remove('collapsed');
-        mainContent.classList.remove('expanded');
-        this.isSidebarOpen = true;
-      }
+      sidebar.classList.add('collapsed');
+      this.isSidebarOpen = false;
+      if (!isSmall) mainContent.classList.add('expanded');
     }
   }
 
   closeSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
-    sidebar.classList.remove('open');
+    sidebar.classList.add('collapsed');
     this.isSidebarOpen = false;
   }
 
@@ -139,27 +130,25 @@ class Dashboard {
 
   getTrackingInfo(orderId) {
     const trackingData = {
-      ORD001: {
-        status: 'In Transit',
-        estimatedDelivery: '2025-08-28',
-        currentLocation: 'Distribution Center - Manila',
+      'JP-2025-001': {
+        status: 'In Production',
+        estimatedDelivery: '2025-01-18',
+        currentLocation: 'Print Floor - Iligan City',
         timeline: [
-          { date: '2025-08-24', status: 'Order Placed', location: 'Online Store' },
-          { date: '2025-08-25', status: 'Processing', location: 'Warehouse - Quezon City' },
-          { date: '2025-08-26', status: 'Shipped', location: 'Distribution Center - Manila' },
-          { date: '2025-08-27', status: 'In Transit', location: 'Distribution Center - Manila' },
+          { date: '2025-01-15', status: 'Order Placed', location: 'Online Store' },
+          { date: '2025-01-15', status: 'Processing', location: 'Prepress - Iligan City' },
+          { date: '2025-01-16', status: 'Printing', location: 'Print Floor - Iligan City' },
+          { date: '2025-01-17', status: 'In Production', location: 'Finishing - Iligan City' },
         ],
       },
-      ORD002: {
-        status: 'Delivered',
-        deliveredDate: '2025-08-20',
-        currentLocation: 'Delivered to Customer',
+      'JP-2025-003': {
+        status: 'Waiting Approval',
+        estimatedDelivery: '2025-01-22',
+        currentLocation: 'Prepress - Iligan City',
         timeline: [
-          { date: '2025-08-18', status: 'Order Placed', location: 'Online Store' },
-          { date: '2025-08-19', status: 'Processing', location: 'Warehouse - Quezon City' },
-          { date: '2025-08-19', status: 'Shipped', location: 'Distribution Center - Manila' },
-          { date: '2025-08-20', status: 'Out for Delivery', location: 'Local Hub - Quezon City' },
-          { date: '2025-08-20', status: 'Delivered', location: 'Customer Address' },
+          { date: '2025-01-08', status: 'Order Placed', location: 'Online Store' },
+          { date: '2025-01-08', status: 'Proof Sent', location: 'Prepress - Iligan City' },
+          { date: '2025-01-09', status: 'Waiting Approval', location: 'Customer Review' },
         ],
       },
     };
@@ -176,6 +165,12 @@ class Dashboard {
   showTrackingModal(orderId, trackingInfo) {
     const modal = document.createElement('div');
     modal.className = 'tracking-modal-overlay';
+    const status = (trackingInfo.status || '').toLowerCase();
+    let badgeClass = 'status-processing';
+    if (status.includes('delivered')) badgeClass = 'status-completed';
+    else if (status.includes('waiting') || status.includes('pending')) badgeClass = 'status-pending';
+    else if (status.includes('cancel')) badgeClass = 'status-cancelled';
+
     modal.innerHTML = `
       <div class="tracking-modal">
         <div class="modal-header">
@@ -184,7 +179,7 @@ class Dashboard {
         </div>
         <div class="modal-body">
           <div class="tracking-status">
-            <h4>Current Status: <span class="status-badge">${trackingInfo.status}</span></h4>
+            <h4>Current Status: <span class="status-badge ${badgeClass}">${trackingInfo.status}</span></h4>
             ${
               trackingInfo.estimatedDelivery
                 ? `<p>Estimated Delivery: <strong>${trackingInfo.estimatedDelivery}</strong></p>`
@@ -219,21 +214,28 @@ class Dashboard {
       if (e.target === modal) modal.remove();
     });
 
-    modal.querySelector('.close-modal').addEventListener('click', () => modal.remove());
+    modal.querySelector('.close-modal')?.addEventListener('click', () => modal.remove());
   }
 
-  updateCartCount() {
-    const cartCount = document.getElementById('cartCount');
-    const currentCount = parseInt(cartCount?.textContent || '0', 10);
-    if (cartCount) {
-      cartCount.textContent = currentCount + 1;
-      cartCount.style.display = 'inline';
-    }
+  updateCartCount(delta = 1) {
+    const counters = document.querySelectorAll('.cart-count');
+    counters.forEach((el) => {
+      const current = parseInt(el.textContent || '0', 10);
+      const next = Math.max(0, current + delta);
+      el.textContent = String(next);
+      el.style.display = next > 0 ? 'inline' : 'none';
+    });
   }
 
   searchProducts(query) {
+    const input = document.querySelector('.search-box input');
+    const searchQuery = (typeof query === 'string' ? query : input?.value || '')
+      .toLowerCase()
+      .trim();
+
+    this.showSection('products');
+
     const productCards = document.querySelectorAll('.product-card');
-    const searchQuery = (query || '').toLowerCase().trim();
 
     productCards.forEach((card) => {
       const productName = card.querySelector('.product-name, .product-title')?.textContent.toLowerCase();
@@ -265,6 +267,8 @@ class Dashboard {
   }
 
   filterProducts(category) {
+    this.showSection('products');
+
     const productCards = document.querySelectorAll('.product-card');
 
     productCards.forEach((card) => {
@@ -275,9 +279,13 @@ class Dashboard {
         card.style.display = 'none';
       }
     });
-
     document.querySelectorAll('.filter-btn').forEach((btn) => btn.classList.remove('active'));
     document.querySelector(`[data-filter="${category}"]`)?.classList.add('active');
+    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  showAllProducts() {
+    this.filterProducts('all');
   }
 
   loadMoreProducts() {
@@ -332,48 +340,42 @@ class Dashboard {
 
 document.addEventListener('DOMContentLoaded', () => {
   window.dashboard = new Dashboard();
+  populateCurrentUser();
 });
 
 function showSection(sectionId) {
   window.dashboard.showSection(sectionId);
 }
-
 function toggleSidebar() {
   window.dashboard.toggleSidebar();
 }
-
 function addToCart(productName, price) {
   window.dashboard.addToCart(productName, price);
-  window.dashboard.updateCartCount();
+  window.dashboard.updateCartCount(1);
 }
-
 function viewOrder(orderId) {
   window.dashboard.viewOrder(orderId);
 }
-
 function trackOrder(orderId) {
   window.dashboard.trackOrder(orderId);
 }
-
 function searchProducts() {
-  const searchInput = document.getElementById('productSearch');
-  window.dashboard.searchProducts(searchInput ? searchInput.value : '');
+  const input = document.querySelector('.search-box input');
+  window.dashboard.searchProducts(input ? input.value : '');
 }
-
 function filterProducts(category) {
   window.dashboard.filterProducts(category);
 }
-
+function showAllProducts() {
+  window.dashboard.showAllProducts();
+}
 function loadMoreProducts() {
   window.dashboard.loadMoreProducts();
 }
-
 function exportOrders(format) {
   window.dashboard.exportOrders(format);
 }
-function logout() {
-  alert('Logged out (stub). Hook up your auth here.');
-}
+
 async function populateCurrentUser() {
   try {
     const res = await fetch('me.php', { credentials: 'include' });
@@ -410,5 +412,3 @@ async function logout() {
   } catch (_) {}
   window.location.replace('julbert.html');
 }
-
-document.addEventListener('DOMContentLoaded', populateCurrentUser);
