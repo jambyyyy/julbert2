@@ -1,414 +1,401 @@
-class Dashboard {
-  constructor() {
-    this.currentSection = 'overview';
-    this.breakpoints = { mobile: 1024 };
-    this.isSidebarOpen = window.innerWidth > this.breakpoints.mobile;
-    this.init();
-  }
-
-  init() {
-    this.setupEventListeners();
-    this.updateResponsiveLayout();
-  }
-
-  setupEventListeners() {
-    window.addEventListener('resize', () => this.updateResponsiveLayout());
-
-    document.addEventListener('click', (e) => {
-      if (window.innerWidth <= this.breakpoints.mobile && this.isSidebarOpen) {
-        const sidebar = document.getElementById('sidebar');
-        const menuToggle = document.querySelector('.menu-toggle');
-        if (!sidebar || !menuToggle) return;
-        if (!sidebar.contains(e.target) && e.target !== menuToggle) {
-          this.closeSidebar();
-        }
-      }
-    });
-
-    const searchBtn = document.querySelector('.search-box button');
-    const searchInput = document.querySelector('.search-box input');
-    if (searchBtn) searchBtn.addEventListener('click', () => this.searchProducts());
-    if (searchInput) {
-      searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') this.searchProducts();
-      });
-    }
-  }
-
-  updateResponsiveLayout() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    if (!sidebar || !mainContent) return;
-
-    if (window.innerWidth <= this.breakpoints.mobile) {
-      sidebar.classList.add('collapsed');
-      mainContent.classList.add('expanded');
-      this.isSidebarOpen = false;
-    } else {
-      sidebar.classList.remove('collapsed');
-      mainContent.classList.remove('expanded');
-      this.isSidebarOpen = true;
-    }
-  }
-
-  showSection(id) {
-    document.querySelectorAll('.dashboard-section').forEach((s) => s.classList.remove('active'));
-    const target = document.getElementById(id);
-    if (target) {
-      target.classList.add('active');
-      this.currentSection = id;
-      this.updatePageHeader(id);
-    }
-
-    if (window.innerWidth <= this.breakpoints.mobile) this.closeSidebar();
-  }
-
-  updatePageHeader(sectionId) {
-    const pageTitle = document.getElementById('pageTitle');
-    const breadcrumb = document.getElementById('breadcrumb');
-
-    const sectionTitles = {
-      overview: 'Dashboard Overview',
-      products: 'Our Products & Services',
-      orders: 'Order History',
-      tracking: 'Track Your Orders',
-      cart: 'Shopping Cart',
-    };
-
-    const sectionBreadcrumbs = {
-      overview: 'Home > Dashboard',
-      products: 'Home > Dashboard > Products',
-      orders: 'Home > Dashboard > Orders',
-      tracking: 'Home > Dashboard > Tracking',
-      cart: 'Home > Dashboard > Cart',
-    };
-
-    if (pageTitle) pageTitle.textContent = sectionTitles[sectionId] || 'Dashboard';
-    if (breadcrumb) breadcrumb.textContent = sectionBreadcrumbs[sectionId] || 'Home > Dashboard';
-  }
-
-  toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    if (!sidebar || !mainContent) return;
-
-    const isSmall = window.innerWidth <= this.breakpoints.mobile;
-
-    if (sidebar.classList.contains('collapsed')) {
-      sidebar.classList.remove('collapsed');
-      this.isSidebarOpen = true;
-      if (!isSmall) mainContent.classList.remove('expanded');
-    } else {
-      sidebar.classList.add('collapsed');
-      this.isSidebarOpen = false;
-      if (!isSmall) mainContent.classList.add('expanded');
-    }
-  }
-
-  closeSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    if (!sidebar) return;
-    sidebar.classList.add('collapsed');
-    this.isSidebarOpen = false;
-  }
-
-  addToCart(productName, price) {
-    console.log(`Added ${productName} (${price}) to cart`);
-    alert(`${productName} has been added to your cart!`);
-  }
-
-  viewOrder(orderId) {
-    console.log(`Viewing order: ${orderId}`);
-    alert(`Viewing details for order ${orderId}`);
-  }
-
-  trackOrder(orderId) {
-    console.log(`Tracking order: ${orderId}`);
-    const trackingInfo = this.getTrackingInfo(orderId);
-    this.showTrackingModal(orderId, trackingInfo);
-  }
-
-  getTrackingInfo(orderId) {
-    const trackingData = {
-      'JP-2025-001': {
-        status: 'In Production',
-        estimatedDelivery: '2025-01-18',
-        currentLocation: 'Print Floor - Iligan City',
-        timeline: [
-          { date: '2025-01-15', status: 'Order Placed', location: 'Online Store' },
-          { date: '2025-01-15', status: 'Processing', location: 'Prepress - Iligan City' },
-          { date: '2025-01-16', status: 'Printing', location: 'Print Floor - Iligan City' },
-          { date: '2025-01-17', status: 'In Production', location: 'Finishing - Iligan City' },
-        ],
-      },
-      'JP-2025-003': {
-        status: 'Waiting Approval',
-        estimatedDelivery: '2025-01-22',
-        currentLocation: 'Prepress - Iligan City',
-        timeline: [
-          { date: '2025-01-08', status: 'Order Placed', location: 'Online Store' },
-          { date: '2025-01-08', status: 'Proof Sent', location: 'Prepress - Iligan City' },
-          { date: '2025-01-09', status: 'Waiting Approval', location: 'Customer Review' },
-        ],
-      },
-    };
-
-    return (
-      trackingData[orderId] || {
-        status: 'Order Not Found',
-        timeline: [],
-        currentLocation: '—',
-      }
-    );
-  }
-
-  showTrackingModal(orderId, trackingInfo) {
-    const modal = document.createElement('div');
-    modal.className = 'tracking-modal-overlay';
-    const status = (trackingInfo.status || '').toLowerCase();
-    let badgeClass = 'status-processing';
-    if (status.includes('delivered')) badgeClass = 'status-completed';
-    else if (status.includes('waiting') || status.includes('pending')) badgeClass = 'status-pending';
-    else if (status.includes('cancel')) badgeClass = 'status-cancelled';
-
-    modal.innerHTML = `
-      <div class="tracking-modal">
-        <div class="modal-header">
-          <h3>Order Tracking - ${orderId}</h3>
-          <button class="close-modal" aria-label="Close">&times;</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Julbert Printing Press Inc.</title>
+  <link rel="stylesheet" href="dashboard_julbert_styles.css" />
+   <link rel="stylesheet" href="dashboard_julbert_responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="logo-section">
+        <div class="logo">
+          <img src="photos/logo.jpg" alt="LOGO">
         </div>
-        <div class="modal-body">
-          <div class="tracking-status">
-            <h4>Current Status: <span class="status-badge ${badgeClass}">${trackingInfo.status}</span></h4>
-            ${
-              trackingInfo.estimatedDelivery
-                ? `<p>Estimated Delivery: <strong>${trackingInfo.estimatedDelivery}</strong></p>`
-                : trackingInfo.deliveredDate
-                ? `<p>Delivered on: <strong>${trackingInfo.deliveredDate}</strong></p>`
-                : ''
-            }
-            <p>Current Location: <strong>${trackingInfo.currentLocation || '—'}</strong></p>
+        <h1 class="company-name">JULBERT PRINTING PRESS INC.</h1>
+      </div>
+
+      <div class="header-right">
+        <div class="location">
+          <span class="location-icon">📍</span>
+          <span>1st East Rosario, Tubod, Iligan City</span>
+        </div>
+
+        <div class="search-container">
+          <div class="search-box">
+            <input type="text" placeholder="Search products..." id="productSearch">
+            <button type="button" onclick="searchProducts()">
+              <span>🔍</span>
+            </button>
           </div>
-          <div class="tracking-timeline">
-            <h4>Tracking Timeline:</h4>
-            ${
-              (trackingInfo.timeline || [])
-                .map(
-                  (item) => `
-              <div class="timeline-item">
-                <div class="timeline-date">${item.date}</div>
-                <div class="timeline-status">${item.status}</div>
-                <div class="timeline-location">${item.location}</div>
-              </div>`
-                )
-                .join('') || '<p>No timeline available.</p>'
-            }
+        </div>
+
+        <nav class="auth-buttons">
+          <button class="nav-item btn-cart" onclick="toggleCart()" id="cartBtn">
+            <span class="cart-icon">🛒</span>
+            <span>Cart</span>
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+          <button class="nav-item btn-account" onclick="openDashboard()">
+            <span class="account-icon">👤</span>
+            <span>My Account</span>
+          </button>
+          <button class="nav-item btn-logout" onclick="handleLogout()" id="logoutBtn">
+            <span class="logout-icon">🚪</span>
+            <span>Logout</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <nav class="product-nav">
+    <div class="container">
+      <div class="product-categories">
+        <div class="category-menu">
+          <div class="category-item">
+            <a href="#all-products" class="category-link active">All Products</a>
+          </div>
+          
+          <div class="category-item">
+            <a href="#business-cards" class="category-link">Business Cards</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Standard Business Cards</a>
+              <a href="#" class="dropdown-item">Premium Business Cards</a>
+              <a href="#" class="dropdown-item">Glossy Finish</a>
+              <a href="#" class="dropdown-item">Matte Finish</a>
+              <a href="#" class="dropdown-item">Round Corners</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#marketing" class="category-link">Marketing Materials</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Flyers & Brochures</a>
+              <a href="#" class="dropdown-item">Postcards</a>
+              <a href="#" class="dropdown-item">Catalogs</a>
+              <a href="#" class="dropdown-item">Booklets</a>
+              <a href="#" class="dropdown-item">Newsletters</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#signs-banners" class="category-link">Signs & Banners</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Banners</a>
+              <a href="#" class="dropdown-item">A-Frame Signs</a>
+              <a href="#" class="dropdown-item">Yard Signs</a>
+              <a href="#" class="dropdown-item">Window Decals</a>
+              <a href="#" class="dropdown-item">Floor Graphics</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#invitations" class="category-link">Invitations & Stationery</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Wedding Invitations</a>
+              <a href="#" class="dropdown-item">Birthday Invitations</a>
+              <a href="#" class="dropdown-item">Corporate Events</a>
+              <a href="#" class="dropdown-item">Letterheads</a>
+              <a href="#" class="dropdown-item">Envelopes</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#stickers" class="category-link">Stickers & Labels</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Circle Stickers</a>
+              <a href="#" class="dropdown-item">Square Stickers</a>
+              <a href="#" class="dropdown-item">Custom Shape</a>
+              <a href="#" class="dropdown-item">Product Labels</a>
+              <a href="#" class="dropdown-item">Address Labels</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#gifts" class="category-link">Gifts & Décor</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Custom Mugs</a>
+              <a href="#" class="dropdown-item">Photo Frames</a>
+              <a href="#" class="dropdown-item">Canvas Prints</a>
+              <a href="#" class="dropdown-item">Calendars</a>
+              <a href="#" class="dropdown-item">Magnets</a>
+            </div>
+          </div>
           </div>
         </div>
       </div>
-    `;
+    </div>
+  </nav>
 
-    document.body.appendChild(modal);
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-header">
+      <h3>Shopping Cart</h3>
+      <button onclick="toggleCart()" class="close-cart">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="empty-cart">
+        <p>Your cart is empty</p>
+        <p class="empty-cart-subtitle">Add some products to get started</p>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <button class="btn-checkout" onclick="checkout()">Proceed to Checkout</button>
+    </div>
+  </div>
 
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.remove();
-    });
+  <div class="dashboard-modal" id="dashboardModal">
+    <div class="dashboard-content">
+      <div class="dashboard-header">
+        <button class="dashboard-close" onclick="closeDashboard()">&times;</button>
+        <h2>Customer Profile</h2>
+       <div class="profile-summary">
+          <p><strong>Welcome, <span class="user-name">Guest</span>!</strong></p>
+          <p><strong>Email:</strong> <span class="user-email"></span></p>
+        </div>
+    </div>
+      
+      <div class="orders-section">
+        <h3>Recent Orders</h3>
+        <div class="orders-container">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order No.</th>
+                <th>Order Date</th>
+                <th>Products</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <tr>
+                <td>JP-2025-001</td>
+                <td>Jan 15, 2025</td>
+                <td>Business Cards (500 pcs)</td>
+                <td>&#8369;1,250.00</td>
+                <td><span class="status-badge status-completed">Completed</span></td>
+              </tr>
+              <tr>
+                <td>JP-2025-002</td>
+                <td>Jan 22, 2025</td>
+                <td>Flyers (1000 pcs), Brochures (200 pcs)</td>
+                <td>&#8369;2,800.00</td>
+                <td><span class="status-badge status-processing">Processing</span></td>
+              </tr>
+              <tr>
+                <td>JP-2025-003</td>
+                <td>Jan 28, 2025</td>
+                <td>Custom Stickers (300 pcs)</td>
+                <td>&#8369;850.00</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td>JP-2025-004</td>
+                <td>Feb 01, 2025</td>
+                <td>T-Shirts (50 pcs)</td>
+                <td>&#8369;3,200.00</td>
+                <td><span class="status-badge status-processing">Processing</span></td>
+              </tr>
+              <tr>
+                <td>JP-2025-005</td>
+                <td>Feb 05, 2025</td>
+                <td>Banners (2 pcs), Yard Signs (10 pcs)</td>
+                <td>&#8369;4,500.00</td>
+                <td><span class="status-badge status-cancelled">Cancelled</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    modal.querySelector('.close-modal')?.addEventListener('click', () => modal.remove());
-  }
+  <main>
+    <section id="products" class="page-section">
+      <div class="content">
+        <div class="products-grid">
+          <div class="product-card" data-category="marketing">
+            <div class="product-image">
+              <img src="photos/Postcard1.jpg" alt="POSTCARD">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Postcards</h3>
+              <p class="product-description">Premium quality postcards for direct mail marketing and personal correspondence. Available in multiple sizes and finishes.</p>
+              <div class="product-price">Starting at &#8369;2.50/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('postcards')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
 
-  updateCartCount(delta = 1) {
-    const counters = document.querySelectorAll('.cart-count');
-    counters.forEach((el) => {
-      const current = parseInt(el.textContent || '0', 10);
-      const next = Math.max(0, current + delta);
-      el.textContent = String(next);
-      el.style.display = next > 0 ? 'inline' : 'none';
-    });
-  }
+          <div class="product-card" data-category="marketing">
+            <div class="product-image">
+              <img src="photos/flyers.avif" alt="FLYERS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Flyers & Brochures</h3>
+              <p class="product-description">Eye-catching flyers and informative brochures that effectively communicate your message and drive customer engagement.</p>
+              <div class="product-price">Starting at &#8369;1.20/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('flyers')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
 
-  searchProducts(query) {
-    const input = document.querySelector('.search-box input');
-    const searchQuery = (typeof query === 'string' ? query : input?.value || '')
-      .toLowerCase()
-      .trim();
+          <div class="product-card" data-category="stickers">
+            <div class="product-image">
+              <img src="photos/sticker.png" alt="STICKERS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Stickers & Labels</h3>
+              <p class="product-description">Durable custom stickers and labels for branding, packaging, and promotional purposes. Weather-resistant options available.</p>
+              <div class="product-price">Starting at &#8369;0.75/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('stickers')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
 
-    this.showSection('products');
+          <div class="product-card" data-category="business-cards">
+            <div class="product-image">
+              <img src="photos/businesscard.webp" alt="BUSINESS CARD">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Business Cards</h3>
+              <p class="product-description">Professional business cards that make lasting impressions. Choose from standard, premium, and specialty finishes.</p>
+              <div class="product-price">Starting at &#8369;2.00/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('business-cards')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
 
-    const productCards = document.querySelectorAll('.product-card');
+          <div class="product-card" data-category="signs-banners">
+            <div class="product-image">
+              <img src="photos/banners.jpeg" alt="BANNERS & SIGNS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Banners & Signs</h3>
+              <p class="product-description">High-quality vinyl banners and signs perfect for events, promotions, and outdoor advertising.</p>
+              <div class="product-price">Starting at &#8369;150/sqft</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('banners')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
 
-    productCards.forEach((card) => {
-      const productName = card.querySelector('.product-name, .product-title')?.textContent.toLowerCase();
-      const productDescription = card.querySelector('.product-description')?.textContent.toLowerCase();
+          <div class="product-card" data-category="invitations">
+            <div class="product-image">
+              <img src="photos/invatation.jpg" alt="INVATATIONS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Invitations & Stationery</h3>
+              <p class="product-description">Elegant invitations and custom stationery for weddings, events, and corporate communications.</p>
+              <div class="product-price">Starting at &#8369;15.00/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('invitations')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
 
-      if ((productName && productName.includes(searchQuery)) || (productDescription && productDescription.includes(searchQuery))) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
+          <div class="product-card" data-category="gifts">
+            <div class="product-image">
+              <img src="photos/GIFT.webp" alt="GIFTS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Custom Gifts & Décor</h3>
+              <p class="product-description">Personalized mugs, photo frames, canvas prints, and decorative items perfect for gifts and home décor.</p>
+              <div class="product-price">Starting at &#8369;250.00/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('gifts')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
 
-    const visibleProducts = Array.from(productCards).filter((card) => card.style.display !== 'none');
-    this.toggleNoResultsMessage(visibleProducts.length === 0);
-  }
+          <div class="product-card" data-category="marketing">
+            <div class="product-image">
+              <img src="photos/booklets-2.webp" alt="BOOKLETS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Catalogs & Booklets</h3>
+              <p class="product-description">Professional catalogs and booklets for showcasing your products and services with stunning layouts.</p>
+              <div class="product-price">Starting at &#8369;25.00/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('catalogs')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  toggleNoResultsMessage(show) {
-    let noResultsMsg = document.getElementById('noResultsMessage');
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="footer-logo-section">
+          <div class="footer-logo">
+            <img src="photos/logo.jpg" alt="LOGO">
+          </div>
+          <div class="footer-company-info">
+            <h3>JULBERT PRINTING PRESS INC.</h3>
+            <p class="footer-description">
+              Your professional printing partner for over 30 years. We deliver quality printing solutions
+              with exceptional service and guaranteed satisfaction for all your business needs.
+            </p>
+          </div>
+        </div>
+      </div>
 
-    if (show && !noResultsMsg) {
-      noResultsMsg = document.createElement('div');
-      noResultsMsg.id = 'noResultsMessage';
-      noResultsMsg.className = 'no-results-message';
-      noResultsMsg.innerHTML = '<p>No products found matching your search.</p>';
-      document.querySelector('.products-grid')?.appendChild(noResultsMsg);
-    } else if (!show && noResultsMsg) {
-      noResultsMsg.remove();
-    }
-  }
+      <div class="footer-section">
+        <h4>Contact Information</h4>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <span>1st East Rosario, Tubod, Iligan City</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <span>(063) 221-5663</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">✉️</span>
+            <span>julbertpressiligan@gmail.com</span>
+          </div>
+        </div>
+      </div>
 
-  filterProducts(category) {
-    this.showSection('products');
+      <div class="footer-section">
+        <h4>Business Hours</h4>
+        <div class="business-hours">
+          <p><strong>Monday - Friday:</strong> 8:00 AM - 6:00 PM</p>
+          <p><strong>Saturday:</strong> 9:00 AM - 4:00 PM</p>
+          <p><strong>Sunday:</strong> Closed</p>
+        </div>
+      </div>
+      </div>
+    </div>
 
-    const productCards = document.querySelectorAll('.product-card');
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <p>&copy; 2025 Julbert Printing Press Inc. All rights reserved.</p>
+        <p>Trusted quality and service for over 30 years</p>
+      </div>
+    </div>
+  </footer>
 
-    productCards.forEach((card) => {
-      const productCategory = card.dataset.category;
-      if (category === 'all' || productCategory === category) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-    document.querySelectorAll('.filter-btn').forEach((btn) => btn.classList.remove('active'));
-    document.querySelector(`[data-filter="${category}"]`)?.classList.add('active');
-    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  showAllProducts() {
-    this.filterProducts('all');
-  }
-
-  loadMoreProducts() {
-    console.log('Loading more products...');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    if (loadMoreBtn) {
-      loadMoreBtn.textContent = 'Loading...';
-      loadMoreBtn.disabled = true;
-
-      setTimeout(() => {
-        loadMoreBtn.textContent = 'Load More Products';
-        loadMoreBtn.disabled = false;
-      }, 1500);
-    }
-  }
-
-  exportOrders(format = 'csv') {
-    console.log(`Exporting orders as ${format}...`);
-
-    const orders = [
-      { id: 'ORD001', date: '2025-08-24', total: '₱1,599.00', status: 'Processing' },
-      { id: 'ORD002', date: '2025-08-20', total: '₱899.50', status: 'Delivered' },
-    ];
-
-    if (format === 'csv') {
-      this.downloadCSV(orders);
-    } else if (format === 'pdf') {
-      this.downloadPDF(orders);
-    }
-  }
-
-  downloadCSV(data) {
-    const csvContent = [
-      'Order ID,Date,Total,Status',
-      ...data.map((o) => `${o.id},${o.date},${o.total},${o.status}`),
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'orders.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-  }
-
-  downloadPDF(_data) {
-    console.log('PDF export functionality would be implemented here');
-    alert('PDF export feature coming soon!');
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  window.dashboard = new Dashboard();
-  populateCurrentUser();
-});
-
-function showSection(sectionId) {
-  window.dashboard.showSection(sectionId);
-}
-function toggleSidebar() {
-  window.dashboard.toggleSidebar();
-}
-function addToCart(productName, price) {
-  window.dashboard.addToCart(productName, price);
-  window.dashboard.updateCartCount(1);
-}
-function viewOrder(orderId) {
-  window.dashboard.viewOrder(orderId);
-}
-function trackOrder(orderId) {
-  window.dashboard.trackOrder(orderId);
-}
-function searchProducts() {
-  const input = document.querySelector('.search-box input');
-  window.dashboard.searchProducts(input ? input.value : '');
-}
-function filterProducts(category) {
-  window.dashboard.filterProducts(category);
-}
-function showAllProducts() {
-  window.dashboard.showAllProducts();
-}
-function loadMoreProducts() {
-  window.dashboard.loadMoreProducts();
-}
-function exportOrders(format) {
-  window.dashboard.exportOrders(format);
-}
-
-async function populateCurrentUser() {
-  try {
-    const res = await fetch('me.php', { credentials: 'include' });
-    const data = await res.json();
-
-    if (!data.ok) {
-      window.location.replace('julbert.html');
-      return;
-    }
-
-    const nameEl = document.querySelector('.user-name');
-    const emailEl = document.querySelector('.user-email');
-    const avatarEl = document.querySelector('.user-avatar');
-
-    if (nameEl)  nameEl.textContent  = data.customer.full_name || '';
-    if (emailEl) emailEl.textContent = data.customer.email || '';
-    if (avatarEl) {
-      const initials = (data.customer.full_name || '')
-        .split(/\s+/)
-        .filter(Boolean)
-        .map(s => s[0].toUpperCase())
-        .slice(0,2)
-        .join('') || 'JP';
-      avatarEl.textContent = initials;
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-async function logout() {
-  try {
-    await fetch('logout.php', { method: 'POST', credentials: 'include' });
-  } catch (_) {}
-  window.location.replace('julbert.html');
-}
+  <script src="dashboard_julbert.js" defer></script> 
+</body>
+</html>
