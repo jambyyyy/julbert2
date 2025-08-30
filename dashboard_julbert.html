@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Julbert Printing Press Inc.</title>
-  <link rel="stylesheet" href="dashboard_julbert.css" />
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Julbert Printing Press Inc.</title>
+  <link rel="stylesheet" href="dashboard_julbert_styles.css" />
+   <link rel="stylesheet" href="dashboard_julbert_responsive.css" />
 </head>
 <body>
-  <!-- Header from landing page -->
   <header class="header">
     <div class="container">
       <div class="logo-section">
         <div class="logo">
-          <div class="logo-placeholder">JP</div>
+          <img src="photos/logo.jpg" alt="LOGO">
         </div>
         <h1 class="company-name">JULBERT PRINTING PRESS INC.</h1>
       </div>
@@ -23,14 +24,27 @@
           <span>1st East Rosario, Tubod, Iligan City</span>
         </div>
 
-        <nav class="auth-buttons">
-          <button class="nav-item" onclick="showSection('cart')">
-            <span>🛒</span>
-            <span>Cart (3)</span>
-          </button>
+        <div class="search-container">
+          <div class="search-box">
+            <input type="text" placeholder="Search products..." id="productSearch">
+            <button type="button" onclick="searchProducts()">
+              <span>🔍</span>
+            </button>
+          </div>
+        </div>
 
-          <button class="nav-item btn-logout" onclick="logout()">
-            <span>👤</span>
+        <nav class="auth-buttons">
+          <button class="nav-item btn-cart" onclick="toggleCart()" id="cartBtn">
+            <span class="cart-icon">🛒</span>
+            <span>Cart</span>
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+          <button class="nav-item btn-account" onclick="openDashboard()">
+            <span class="account-icon">👤</span>
+            <span>My Account</span>
+          </button>
+          <button class="nav-item btn-logout" onclick="handleLogout()" id="logoutBtn">
+            <span class="logout-icon">🚪</span>
             <span>Logout</span>
           </button>
         </nav>
@@ -38,484 +52,350 @@
     </div>
   </header>
 
-  <div class="dashboard-container">
-    <!-- Professional Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="user-info">
-          <div class="user-avatar">JD</div>
-          <div class="user-details">
-            <div class="user-name">John Doe</div>
-            <div class="user-email">john@example.com</div>
+  <nav class="product-nav">
+    <div class="container">
+      <div class="product-categories">
+        <div class="category-menu">
+          <div class="category-item">
+            <a href="#all-products" class="category-link active">All Products</a>
+          </div>
+          
+          <div class="category-item">
+            <a href="#business-cards" class="category-link">Business Cards</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Standard Business Cards</a>
+              <a href="#" class="dropdown-item">Premium Business Cards</a>
+              <a href="#" class="dropdown-item">Glossy Finish</a>
+              <a href="#" class="dropdown-item">Matte Finish</a>
+              <a href="#" class="dropdown-item">Round Corners</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#marketing" class="category-link">Marketing Materials</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Flyers & Brochures</a>
+              <a href="#" class="dropdown-item">Postcards</a>
+              <a href="#" class="dropdown-item">Catalogs</a>
+              <a href="#" class="dropdown-item">Booklets</a>
+              <a href="#" class="dropdown-item">Newsletters</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#signs-banners" class="category-link">Signs & Banners</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Banners</a>
+              <a href="#" class="dropdown-item">A-Frame Signs</a>
+              <a href="#" class="dropdown-item">Yard Signs</a>
+              <a href="#" class="dropdown-item">Window Decals</a>
+              <a href="#" class="dropdown-item">Floor Graphics</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#invitations" class="category-link">Invitations & Stationery</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Wedding Invitations</a>
+              <a href="#" class="dropdown-item">Birthday Invitations</a>
+              <a href="#" class="dropdown-item">Corporate Events</a>
+              <a href="#" class="dropdown-item">Letterheads</a>
+              <a href="#" class="dropdown-item">Envelopes</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#stickers" class="category-link">Stickers & Labels</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Circle Stickers</a>
+              <a href="#" class="dropdown-item">Square Stickers</a>
+              <a href="#" class="dropdown-item">Custom Shape</a>
+              <a href="#" class="dropdown-item">Product Labels</a>
+              <a href="#" class="dropdown-item">Address Labels</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <a href="#gifts" class="category-link">Gifts & Décor</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Custom Mugs</a>
+              <a href="#" class="dropdown-item">Photo Frames</a>
+              <a href="#" class="dropdown-item">Canvas Prints</a>
+              <a href="#" class="dropdown-item">Calendars</a>
+              <a href="#" class="dropdown-item">Magnets</a>
+            </div>
+          </div>
           </div>
         </div>
       </div>
+    </div>
+  </nav>
 
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title">DASHBOARD</div>
-          <button class="nav-item active" onclick="showSection('overview')" type="button">
-            <span class="nav-icon">📊</span>
-            <span>Overview</span>
-          </button>
-        </div>
-
-        <div class="nav-section">
-          <div class="nav-section-title">PRODUCTS</div>
-          <button class="nav-item" onclick="showSection('products')" type="button">
-            <span class="nav-icon">📦</span>
-            <span>All Products</span>
-          </button>
-          <button class="nav-item" onclick="filterProducts('postcards')" type="button">
-            <span class="nav-icon">📮</span>
-            <span>Postcards</span>
-          </button>
-          <button class="nav-item" onclick="filterProducts('flyers')" type="button">
-            <span class="nav-icon">📄</span>
-            <span>Flyers & Brochures</span>
-          </button>
-          <button class="nav-item" onclick="filterProducts('stickers')" type="button">
-            <span class="nav-icon">🏷️</span>
-            <span>Stickers & Labels</span>
-          </button>
-          <button class="nav-item" onclick="filterProducts('business-cards')" type="button">
-            <span class="nav-icon">💼</span>
-            <span>Business Cards</span>
-          </button>
-          <button class="nav-item" onclick="filterProducts('banners')" type="button">
-            <span class="nav-icon">🎯</span>
-            <span>Banners</span>
-          </button>
-        </div>
-
-        <div class="nav-section">
-          <div class="nav-section-title">ORDERS</div>
-          <button class="nav-item" onclick="showSection('orders')" type="button">
-            <span class="nav-icon">📋</span>
-            <span>Order History</span>
-          </button>
-          <button class="nav-item" onclick="showSection('tracking')" type="button">
-            <span class="nav-icon">🚚</span>
-            <span>Track Orders</span>
-          </button>
-          <button class="nav-item" onclick="showSection('cart')" type="button">
-            <span class="nav-icon">🛒</span>
-            <span>Shopping Cart</span>
-            <span class="cart-count">3</span>
-          </button>
-        </div>
-      </nav>
-    </aside>
-
-    <main class="main-content" id="mainContent">
-      <div class="top-bar">
-        <div class="top-bar-left">
-          <button class="menu-toggle" onclick="toggleSidebar()" type="button">☰</button>
-          <div class="page-header">
-            <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
-            <div class="breadcrumb" id="breadcrumb">Home > Dashboard</div>
-          </div>
-        </div>
-        <div class="top-bar-right">
-          <div class="search-box">
-            <input type="text" placeholder="Search products..." />
-            <button type="button">Search</button>
-          </div>
-        </div>
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-header">
+      <h3>Shopping Cart</h3>
+      <button onclick="toggleCart()" class="close-cart">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="empty-cart">
+        <p>Your cart is empty</p>
+        <p class="empty-cart-subtitle">Add some products to get started</p>
       </div>
-      <!-- Category bar -->
-      <div class="category-bar">
-          <button class="cat-pill active" onclick="showSection('products')">All Products</button>
-          <button class="cat-pill" onclick="filterProducts('business-cards')">Business Cards</button>
-          <button class="cat-pill" onclick="filterProducts('postcards')">Postcards</button>
-          <button class="cat-pill" onclick="filterProducts('flyers')">Marketing Materials</button>
-          <button class="cat-pill" onclick="filterProducts('banners')">Signs & Banners</button>
-          <button class="cat-pill" onclick="filterProducts('stickers')">Stickers & Labels</button>
-          <button class="cat-pill" onclick="showSection('orders')">Order History</button>
-      </div>
-
-
-      <div class="content-area">
-        <!-- Overview Section -->
-        <section class="dashboard-section active" id="overview">
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon">📦</div>
-              <div class="stat-content">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Total Orders</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">⏳</div>
-              <div class="stat-content">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Pending Orders</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">💰</div>
-              <div class="stat-content">
-                <div class="stat-number">₱15,450</div>
-                <div class="stat-label">Total Spent</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">🚚</div>
-              <div class="stat-content">
-                <div class="stat-number">2</div>
-                <div class="stat-label">In Transit</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="content-card">
-            <h3 class="card-title">Recent Orders</h3>
-            <div class="table-container">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Product</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#JP-2025-001</td>
-                    <td>Business Cards</td>
-                    <td>Jan 15, 2025</td>
-                    <td><span class="status-badge status-processing">Processing</span></td>
-                    <td>₱1,200</td>
-                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-001')">View</button></td>
-                  </tr>
-                  <tr>
-                    <td>#JP-2025-002</td>
-                    <td>Flyers</td>
-                    <td>Jan 10, 2025</td>
-                    <td><span class="status-badge status-completed">Completed</span></td>
-                    <td>₱850</td>
-                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-002')">View</button></td>
-                  </tr>
-                  <tr>
-                    <td>#JP-2025-003</td>
-                    <td>Postcards</td>
-                    <td>Jan 8, 2025</td>
-                    <td><span class="status-badge status-pending">Pending</span></td>
-                    <td>₱650</td>
-                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-003')">View</button></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- Products Section -->
-        <section class="dashboard-section" id="products">
-          <div class="section-header">
-            <h2 class="section-title">Our Products & Services</h2>
-            <p class="section-subtitle">Professional printing solutions for all your business needs</p>
-          </div>
-
-          <div class="products-grid">
-            <div class="product-card" data-category="postcards">
-              <div class="product-image">
-                <div class="product-image-placeholder">POSTCARD IMAGE</div>
-              </div>
-              <div class="product-info">
-                <h3 class="product-title">Premium Postcards</h3>
-                <p class="product-description">High-quality postcards perfect for marketing campaigns and personal messages.</p>
-                <div class="product-price">Starting at ₱15/piece</div>
-                <div class="product-actions">
-                  <button class="btn-primary" onclick="addToCart('Premium Postcards', '₱15/piece')">Add to Cart</button>
-                  <button class="btn-secondary" onclick="viewProduct('postcards')">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="flyers">
-              <div class="product-image">
-                <div class="product-image-placeholder">FLYER IMAGE</div>
-              </div>
-              <div class="product-info">
-                <h3 class="product-title">Custom Flyers</h3>
-                <p class="product-description">Eye-catching flyers that grab attention and deliver your message effectively.</p>
-                <div class="product-price">Starting at ₱25/piece</div>
-                <div class="product-actions">
-                  <button class="btn-primary" onclick="addToCart('Custom Flyers', '₱25/piece')">Add to Cart</button>
-                  <button class="btn-secondary" onclick="viewProduct('flyers')">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="stickers">
-              <div class="product-image">
-                <div class="product-image-placeholder">STICKER IMAGE</div>
-              </div>
-              <div class="product-info">
-                <h3 class="product-title">Vinyl Stickers</h3>
-                <p class="product-description">Durable weather-resistant stickers for indoor and outdoor use.</p>
-                <div class="product-price">Starting at ₱10/piece</div>
-                <div class="product-actions">
-                  <button class="btn-primary" onclick="addToCart('Vinyl Stickers', '₱10/piece')">Add to Cart</button>
-                  <button class="btn-secondary" onclick="viewProduct('stickers')">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="business-cards">
-              <div class="product-image">
-                <div class="product-image-placeholder">BUSINESS CARD IMAGE</div>
-              </div>
-              <div class="product-info">
-                <h3 class="product-title">Business Cards</h3>
-                <p class="product-description">Professional business cards that make a great first impression.</p>
-                <div class="product-price">Starting at ₱100/100pcs</div>
-                <div class="product-actions">
-                  <button class="btn-primary" onclick="addToCart('Business Cards', '₱100/100pcs')">Add to Cart</button>
-                  <button class="btn-secondary" onclick="viewProduct('business-cards')">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="flyers">
-              <div class="product-image">
-                <div class="product-image-placeholder">BROCHURE IMAGE</div>
-              </div>
-              <div class="product-info">
-                <h3 class="product-title">Tri-fold Brochures</h3>
-                <p class="product-description">Informative brochures perfect for showcasing your services and products.</p>
-                <div class="product-price">Starting at ₱35/piece</div>
-                <div class="product-actions">
-                  <button class="btn-primary" onclick="addToCart('Tri-fold Brochures', '₱35/piece')">Add to Cart</button>
-                  <button class="btn-secondary" onclick="viewProduct('brochures')">View Details</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="banners">
-              <div class="product-image">
-                <div class="product-image-placeholder">BANNER IMAGE</div>
-              </div>
-              <div class="product-info">
-                <h3 class="product-title">Vinyl Banners</h3>
-                <p class="product-description">Large format banners for events, promotions, and advertising.</p>
-                <div class="product-price">Starting at ₱250/sqft</div>
-                <div class="product-actions">
-                  <button class="btn-primary" onclick="addToCart('Vinyl Banners', '₱250/sqft')">Add to Cart</button>
-                  <button class="btn-secondary" onclick="viewProduct('banners')">View Details</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Orders Section -->
-        <section class="dashboard-section" id="orders">
-          <div class="content-card">
-            <h3 class="card-title">Order History</h3>
-            <div class="table-container">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Order Date</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#JP-2025-001</td>
-                    <td>Business Cards</td>
-                    <td>500 pcs</td>
-                    <td>Jan 15, 2025</td>
-                    <td><span class="status-badge status-processing">Processing</span></td>
-                    <td>₱1,200</td>
-                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-001')">View</button></td>
-                  </tr>
-                  <tr>
-                    <td>#JP-2025-002</td>
-                    <td>Flyers</td>
-                    <td>100 pcs</td>
-                    <td>Jan 10, 2025</td>
-                    <td><span class="status-badge status-completed">Completed</span></td>
-                    <td>₱850</td>
-                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-002')">View</button></td>
-                  </tr>
-                  <tr>
-                    <td>#JP-2025-003</td>
-                    <td>Postcards</td>
-                    <td>200 pcs</td>
-                    <td>Jan 8, 2025</td>
-                    <td><span class="status-badge status-pending">Pending</span></td>
-                    <td>₱650</td>
-                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2025-003')">View</button></td>
-                  </tr>
-                  <tr>
-                    <td>#JP-2024-098</td>
-                    <td>Vinyl Banner</td>
-                    <td>1 pc (3x6ft)</td>
-                    <td>Dec 28, 2024</td>
-                    <td><span class="status-badge status-completed">Completed</span></td>
-                    <td>₱1,500</td>
-                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2024-098')">View</button></td>
-                  </tr>
-                  <tr>
-                    <td>#JP-2024-097</td>
-                    <td>Stickers</td>
-                    <td>50 pcs</td>
-                    <td>Dec 20, 2024</td>
-                    <td><span class="status-badge status-cancelled">Cancelled</span></td>
-                    <td>₱500</td>
-                    <td><button class="btn-primary btn-sm" onclick="viewOrder('JP-2024-097')">View</button></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- Tracking Section -->
-        <section class="dashboard-section" id="tracking">
-          <div class="content-card">
-            <h3 class="card-title">Track Your Orders</h3>
-            <div class="table-container">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Product</th>
-                    <th>Current Status</th>
-                    <th>Estimated Delivery</th>
-                    <th>Progress</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#JP-2025-001</td>
-                    <td>Business Cards</td>
-                    <td><span class="status-badge status-processing">In Production</span></td>
-                    <td>Jan 18, 2025</td>
-                    <td>
-                      <div class="progress-bar">
-                        <div class="progress-fill" style="width: 60%"></div>
-                      </div>
-                      <span class="progress-text">60%</span>
-                    </td>
-                    <td><button class="btn-primary btn-sm" onclick="trackOrder('JP-2025-001')">Track</button></td>
-                  </tr>
-                  <tr>
-                    <td>#JP-2025-003</td>
-                    <td>Postcards</td>
-                    <td><span class="status-badge status-pending">Waiting Approval</span></td>
-                    <td>Jan 22, 2025</td>
-                    <td>
-                      <div class="progress-bar">
-                        <div class="progress-fill" style="width: 20%"></div>
-                      </div>
-                      <span class="progress-text">20%</span>
-                    </td>
-                    <td><button class="btn-primary btn-sm" onclick="trackOrder('JP-2025-003')">Track</button></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- Cart Section -->
-        <section class="dashboard-section" id="cart">
-          <div class="content-card">
-            <h3 class="card-title">Shopping Cart</h3>
-            <div class="cart-items">
-              <div class="cart-item">
-                <div class="cart-item-image">
-                  <div class="product-image-placeholder">POSTCARD</div>
-                </div>
-                <div class="cart-item-details">
-                  <h4>Premium Postcards</h4>
-                  <p>High-quality postcards for marketing</p>
-                  <div class="cart-item-price">₱15/piece</div>
-                </div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-btn" onclick="updateQuantity('item1', -1)">-</button>
-                  <span class="quantity">100</span>
-                  <button class="quantity-btn" onclick="updateQuantity('item1', 1)">+</button>
-                </div>
-                <div class="cart-item-total">₱1,500</div>
-                <button class="cart-item-remove" onclick="removeFromCart('item1')">×</button>
-              </div>
-
-              <div class="cart-item">
-                <div class="cart-item-image">
-                  <div class="product-image-placeholder">FLYER</div>
-                </div>
-                <div class="cart-item-details">
-                  <h4>Custom Flyers</h4>
-                  <p>Eye-catching promotional flyers</p>
-                  <div class="cart-item-price">₱25/piece</div>
-                </div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-btn" onclick="updateQuantity('item2', -1)">-</button>
-                  <span class="quantity">50</span>
-                  <button class="quantity-btn" onclick="updateQuantity('item2', 1)">+</button>
-                </div>
-                <div class="cart-item-total">₱1,250</div>
-                <button class="cart-item-remove" onclick="removeFromCart('item2')">×</button>
-              </div>
-
-              <div class="cart-item">
-                <div class="cart-item-image">
-                  <div class="product-image-placeholder">BUSINESS CARD</div>
-                </div>
-                <div class="cart-item-details">
-                  <h4>Business Cards</h4>
-                  <p>Professional business cards</p>
-                  <div class="cart-item-price">₱100/100pcs</div>
-                </div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-btn" onclick="updateQuantity('item3', -1)">-</button>
-                  <span class="quantity">2</span>
-                  <button class="quantity-btn" onclick="updateQuantity('item3', 1)">+</button>
-                </div>
-                <div class="cart-item-total">₱200</div>
-                <button class="cart-item-remove" onclick="removeFromCart('item3')">×</button>
-              </div>
-            </div>
-
-            <div class="cart-summary">
-              <div class="cart-summary-row">
-                <span>Subtotal:</span>
-                <span>₱2,950</span>
-              </div>
-              <div class="cart-summary-row">
-                <span>Shipping:</span>
-                <span>₱100</span>
-              </div>
-              <div class="cart-summary-row cart-total">
-                <span>Total:</span>
-                <span>₱3,050</span>
-              </div>
-              <div class="cart-actions">
-                <button class="btn-secondary" onclick="clearCart()">Clear Cart</button>
-                <button class="btn-primary" onclick="proceedToCheckout()">Proceed to Checkout</button>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </main>
+    </div>
+    <div class="cart-footer">
+      <button class="btn-checkout" onclick="checkout()">Proceed to Checkout</button>
+    </div>
   </div>
 
-  <script src="dashboard_julbert.js"></script>
+  <div class="dashboard-modal" id="dashboardModal">
+    <div class="dashboard-content">
+      <div class="dashboard-header">
+        <button class="dashboard-close" onclick="closeDashboard()">&times;</button>
+        <h2>Customer Profile</h2>
+       <div class="profile-summary">
+          <p><strong>Welcome, <span class="user-name">Guest</span>!</strong></p>
+          <p><strong>Email:</strong> <span class="user-email"></span></p>
+        </div>
+    </div>
+      
+      <div class="orders-section">
+        <h3>Recent Orders</h3>
+        <div class="orders-container">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order No.</th>
+                <th>Order Date</th>
+                <th>Products</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <tr>
+                <td>JP-2025-001</td>
+                <td>Jan 15, 2025</td>
+                <td>Business Cards (500 pcs)</td>
+                <td>&#8369;1,250.00</td>
+                <td><span class="status-badge status-completed">Completed</span></td>
+              </tr>
+              <tr>
+                <td>JP-2025-002</td>
+                <td>Jan 22, 2025</td>
+                <td>Flyers (1000 pcs), Brochures (200 pcs)</td>
+                <td>&#8369;2,800.00</td>
+                <td><span class="status-badge status-processing">Processing</span></td>
+              </tr>
+              <tr>
+                <td>JP-2025-003</td>
+                <td>Jan 28, 2025</td>
+                <td>Custom Stickers (300 pcs)</td>
+                <td>&#8369;850.00</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td>JP-2025-004</td>
+                <td>Feb 01, 2025</td>
+                <td>T-Shirts (50 pcs)</td>
+                <td>&#8369;3,200.00</td>
+                <td><span class="status-badge status-processing">Processing</span></td>
+              </tr>
+              <tr>
+                <td>JP-2025-005</td>
+                <td>Feb 05, 2025</td>
+                <td>Banners (2 pcs), Yard Signs (10 pcs)</td>
+                <td>&#8369;4,500.00</td>
+                <td><span class="status-badge status-cancelled">Cancelled</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section id="products" class="page-section">
+      <div class="content">
+        <div class="products-grid">
+          <div class="product-card" data-category="marketing">
+            <div class="product-image">
+              <img src="photos/Postcard1.jpg" alt="POSTCARD">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Postcards</h3>
+              <p class="product-description">Premium quality postcards for direct mail marketing and personal correspondence. Available in multiple sizes and finishes.</p>
+              <div class="product-price">Starting at &#8369;2.50/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('postcards')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card" data-category="marketing">
+            <div class="product-image">
+              <img src="photos/flyers.avif" alt="FLYERS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Flyers & Brochures</h3>
+              <p class="product-description">Eye-catching flyers and informative brochures that effectively communicate your message and drive customer engagement.</p>
+              <div class="product-price">Starting at &#8369;1.20/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('flyers')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card" data-category="stickers">
+            <div class="product-image">
+              <img src="photos/sticker.png" alt="STICKERS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Stickers & Labels</h3>
+              <p class="product-description">Durable custom stickers and labels for branding, packaging, and promotional purposes. Weather-resistant options available.</p>
+              <div class="product-price">Starting at &#8369;0.75/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('stickers')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card" data-category="business-cards">
+            <div class="product-image">
+              <img src="photos/businesscard.webp" alt="BUSINESS CARD">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Business Cards</h3>
+              <p class="product-description">Professional business cards that make lasting impressions. Choose from standard, premium, and specialty finishes.</p>
+              <div class="product-price">Starting at &#8369;2.00/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('business-cards')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card" data-category="signs-banners">
+            <div class="product-image">
+              <img src="photos/banners.jpeg" alt="BANNERS & SIGNS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Banners & Signs</h3>
+              <p class="product-description">High-quality vinyl banners and signs perfect for events, promotions, and outdoor advertising.</p>
+              <div class="product-price">Starting at &#8369;150/sqft</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('banners')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card" data-category="invitations">
+            <div class="product-image">
+              <img src="photos/invatation.jpg" alt="INVATATIONS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Invitations & Stationery</h3>
+              <p class="product-description">Elegant invitations and custom stationery for weddings, events, and corporate communications.</p>
+              <div class="product-price">Starting at &#8369;15.00/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('invitations')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card" data-category="gifts">
+            <div class="product-image">
+              <img src="photos/GIFT.webp" alt="GIFTS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Custom Gifts & Décor</h3>
+              <p class="product-description">Personalized mugs, photo frames, canvas prints, and decorative items perfect for gifts and home décor.</p>
+              <div class="product-price">Starting at &#8369;250.00/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('gifts')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card" data-category="marketing">
+            <div class="product-image">
+              <img src="photos/booklets-2.webp" alt="BOOKLETS">
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Catalogs & Booklets</h3>
+              <p class="product-description">Professional catalogs and booklets for showcasing your products and services with stunning layouts.</p>
+              <div class="product-price">Starting at &#8369;25.00/pc</div>
+              <div class="product-actions">
+                <button class="btn-primary btn-sm" onclick="addToCart('catalogs')">Add to Cart</button>
+                <button class="btn-secondary btn-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="footer-logo-section">
+          <div class="footer-logo">
+            <img src="photos/logo.jpg" alt="LOGO">
+          </div>
+          <div class="footer-company-info">
+            <h3>JULBERT PRINTING PRESS INC.</h3>
+            <p class="footer-description">
+              Your professional printing partner for over 30 years. We deliver quality printing solutions
+              with exceptional service and guaranteed satisfaction for all your business needs.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Contact Information</h4>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <span>1st East Rosario, Tubod, Iligan City</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <span>(063) 221-5663</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">✉️</span>
+            <span>julbertpressiligan@gmail.com</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Business Hours</h4>
+        <div class="business-hours">
+          <p><strong>Monday - Friday:</strong> 8:00 AM - 6:00 PM</p>
+          <p><strong>Saturday:</strong> 9:00 AM - 4:00 PM</p>
+          <p><strong>Sunday:</strong> Closed</p>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <p>&copy; 2025 Julbert Printing Press Inc. All rights reserved.</p>
+        <p>Trusted quality and service for over 30 years</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="dashboard_julbert.js" defer></script> 
 </body>
 </html>
